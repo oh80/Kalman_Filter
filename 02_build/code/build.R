@@ -36,6 +36,10 @@ data <- data |> dplyr::mutate("Topix" = sub(",", "", Topix),
                 "Nintendo" = as.numeric(Nintendo),
                 "Tokyo_denryoku" = as.numeric(Tokyo_denryoku))
 
+#arrange 
+data <- data |> dplyr::mutate("t" = seq(1,226,1)) |> 
+  dplyr::arrange(-t)
+
 #save
 path <- here::here("02_build", "data", "stock.obj")
 saveRDS(data, path)

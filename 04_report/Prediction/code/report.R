@@ -2,14 +2,14 @@
 data_path <-here::here("02_build","data","stock.obj")
 data <- readRDS(data_path)
 
-results_path <- here::here("03_analyze","Prediction","output","results.obj")
-results <- readRDS(results_path)
+result_path <- here::here("03_analyze","Prediction","output","result.obj")
+result <- readRDS(result_path)
 
 library(ggplot2)
 
 
 #get Local level model prediction
-Nintendo_pre <- results[[1]][[2]]
+Nintendo_pre <- result[[1]][[2]]
 days <- 50
 Nintendo_df <- data.frame("t" = seq(1,days,1),
                           "real" = data$Nintendo[1:50],
@@ -33,7 +33,7 @@ ggsave(filename = Nintendo_Local_path, plot = Nintendo_local, device = "pdf",
        width = 8, height = 5, family = "Japan1")
 
 #get trend model prediction
-Nintendo_pre <- results[[2]][[2]]
+Nintendo_pre <- result[[2]][[2]]
 days <- 50
 Nintendo_df <- data.frame("t" = seq(1,days,1),
                           "real" = data$Nintendo[1:50],
@@ -58,7 +58,7 @@ ggsave(filename = Nintendo_Trend_path, plot = Nintendo_trend, device = "pdf",
 
 
 #get Local trend model prediction
-Nintendo_pre <- results[[3]][[2]]
+Nintendo_pre <- result[[3]][[2]]
 days <- 50
 Nintendo_df <- data.frame("t" = seq(1,days,1),
                           "real" = data$Nintendo[1:days],

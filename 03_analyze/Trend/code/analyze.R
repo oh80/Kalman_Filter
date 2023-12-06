@@ -36,7 +36,7 @@ ksf_Trend_Topix <- KFS(fit_Trend_Topix$model)
 Trend <- list(ksf_Trend_Nintendo, ksf_Trend_Tokyo, ksf_Trend_Topix)
 
 
-#Trend Component model
+#Local linear trend model
 mod_LocalTrend_Nintendo <- SSModel(data$Nintendo[1:30] ~ SSMtrend(2, Q = c(list(NA), list(NA))), H = NA)
 fit_LocalTrend_Nintendo <- fitSSM(mod_LocalTrend_Nintendo, numeric(3), method = "BFGS")
 ksf_LocalTrend_Nintendo <- KFS(fit_LocalTrend_Nintendo$model)
@@ -51,7 +51,8 @@ ksf_LocalTrend_Topix <- KFS(fit_LocalTrend_Topix$model)
 
 LocalTrend <- list(ksf_LocalTrend_Nintendo, ksf_LocalTrend_Tokyo, ksf_LocalTrend_Topix)
 
+
 #save results
-results <- list(Local, Trend, LocalTrend)
-path <- here::here("03_analyze", "Trend", "output", "results.obj")
-saveRDS(results, path)
+result <- list(Local, Trend, LocalTrend)
+path <- here::here("03_analyze", "Trend", "output", "result.obj")
+saveRDS(result, path)

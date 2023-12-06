@@ -1,5 +1,4 @@
 #read data
-
 Nintendo_path <- here::here("01_data","data","Nintendo.csv")
 Nintendo <- read.csv(Nintendo_path)
 

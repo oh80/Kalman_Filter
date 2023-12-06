@@ -4,6 +4,7 @@ data <- readRDS(path)
 
 library(KFAS)
 
+
 #Local level model
 mod_Local_Nintendo <- SSModel(data$Nintendo[1:40] ~ SSMtrend(1, Q = NA), H = NA)
 fit_Local_Nintendo <- fitSSM(mod_Local_Nintendo, numeric(2), method = "BFGS")
@@ -44,7 +45,7 @@ Trend <- list(conf_Trend_Nintendo, pre_Trend_Nintendo, conf_Trend_Tokyo,
               pre_Trend_Tokyo, conf_Trend_Topix, pre_Trend_Topix)
 
 
-#Trend Component model
+#Local rinear trend model
 mod_LocalTrend_Nintendo <- SSModel(data$Nintendo[1:40] ~ SSMtrend(2, Q = c(list(NA), list(NA))), H = NA)
 fit_LocalTrend_Nintendo <- fitSSM(mod_LocalTrend_Nintendo, numeric(3), method = "BFGS")
 conf_LocalTrend_Nintendo <- predict(fit_LocalTrend_Nintendo$model, interval ="confidence", n.ahead = 10)
@@ -65,6 +66,6 @@ LocalTrend <- list(conf_LocalTrend_Nintendo, pre_LocalTrend_Nintendo, conf_Local
 
 
 #save results
-results <- list(Local, Trend, LocalTrend)
-path <- here::here("03_analyze", "Prediction", "output", "results.obj")
-saveRDS(results, path)
+result <- list(Local, Trend, LocalTrend)
+path <- here::here("03_analyze", "Prediction", "output", "result.obj")
+saveRDS(result, path)

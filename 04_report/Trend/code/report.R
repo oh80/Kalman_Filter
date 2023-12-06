@@ -2,36 +2,112 @@
 data_path <-here::here("02_build","data","stock.obj")
 data <- readRDS(data_path)
 
-results_path <- here::here("03_analyze","Trend","output","results.obj")
-results <- readRDS(results_path)
+result_path <- here::here("03_analyze","Trend","output","result.obj")
+result <- readRDS(result_path)
 
 library(ggplot2)
 
-#get Nintendo plot
-Nintendo <- results[[1]][[1]]
-Nintendo_df <- data.frame("date" = data$date,
-                          "a" = Nintendo$a[,1][2:227],
-                          "a_hat" = Nintendo$alphahat[,1],
-                          "real" = data$Nintendo,
-                          "t" = seq(1,226,1))
+#get Local level model  Nintendo plot 
+Nintendo <- result[[1]][[1]]
+days = length(Nintendo$a)-1
+Nintendo_df <- data.frame(
+  "a" = Nintendo$a[,1][1:days+1],
+  "a_hat" = Nintendo$alphahat[,1],
+  "real" = data$Nintendo[1:days],
+  "t" = seq(1,days,1))
 
-plot <- ggplot(data = Nintendo_df, mapping = aes(x = t)) +
-  geom_line(aes(y = a, colour = "filter") , data = Nintendo_df) +
-  geom_line(aes(y = real, colour = "real"), data = Nintendo_df) 
+Nintendo_kf_local <- ggplot(data = Nintendo_df, mapping = aes(x = t)) +
+  geom_line(aes(y = a, linetype = "filter") , data = Nintendo_df) +
+  geom_line(aes(y = real, linetype = "real"), data = Nintendo_df) +
+  scale_linetype_manual(values = c("filter" = "solid", "real" ="dashed")) + 
+  theme_classic() + 
+  ylab("株価")+
+  xlab("time")
 
-plot
+
+Nintendo_smo_local <- ggplot(data = Nintendo_df, mapping = aes(x = t)) +
+  geom_line(aes(y = a_hat, linetype = "smoother") , data = Nintendo_df) +
+  geom_line(aes(y = real, linetype = "real"), data = Nintendo_df)+
+  scale_linetype_manual(values = c("smoother"= "solid", "real" ="dashed")) +
+  theme_classic() + 
+  ylab("株価") +
+  xlab("time")
 
 
-#get Tokyo denryoku plot
-Tokyo <- results[[1]][[2]]
-Tokyo_df <- data.frame("date" = data$date,
-                          "a" = Tokyo$a[,1][2:227],
-                          "a_hat" = Tokyo$alphahat[,1],
-                          "real" = data$Tokyo_denryoku,
-                          "t" = seq(1,226,1))
+Nintendo_kf_path <- here::here("04_report","Trend","output","Nintendo_kf_local.pdf")
+ggsave(filename = Nintendo_kf_path, plot = Nintendo_kf_local, device = "pdf",
+       width = 8, height = 5, family = "Japan1")
 
-plot <- ggplot(data = Tokyo_df, mapping = aes(x = t)) +
-  geom_line(aes(y = a, colour = "filter") , data = Tokyo_df) +
-  geom_line(aes(y = real, colour = "real"), data = Tokyo_df) 
+Nintendo_smo_path <- here::here("04_report","Trend","output","Nintendo_smo_local.pdf")
+ggsave(filename = Nintendo_smo_path, plot = Nintendo_smo_local, device = "pdf",
+       width = 8, height = 5, family = "Japan1")
 
-plot
+
+#get trend model  Nintendo plot
+Nintendo <- result[[2]][[1]]
+days = length(Nintendo$a[,1])-1
+Nintendo_df <- data.frame(
+  "a" = Nintendo$a[,1][1:days+1],
+  "a_hat" = Nintendo$alphahat[,1],
+  "real" = data$Nintendo[1:days],
+  "t" = seq(1,days,1))
+
+Nintendo_kf_trend <- ggplot(data = Nintendo_df, mapping = aes(x = t)) +
+  geom_line(aes(y = a, linetype = "filter") , data = Nintendo_df) +
+  geom_line(aes(y = real, linetype = "real"), data = Nintendo_df) +
+  scale_linetype_manual(values = c("filter" = "solid", "real" ="dashed")) + 
+  theme_classic() + 
+  ylab("株価")+
+  xlab("time")
+
+Nintendo_smo_trend <- ggplot(data = Nintendo_df, mapping = aes(x = t)) +
+  geom_line(aes(y = a_hat, linetype = "smoother") , data = Nintendo_df) +
+  geom_line(aes(y = real, linetype = "real"), data = Nintendo_df)+
+  scale_linetype_manual(values = c("smoother"= "solid", "real" ="dashed")) +
+  theme_classic() + 
+  ylab("株価") +
+  xlab("time")
+
+
+Nintendo_kf_path <- here::here("04_report","Trend","output","Nintendo_kf_trend.pdf")
+ggsave(filename = Nintendo_kf_path, plot = Nintendo_kf_trend, device = "pdf",
+       width = 8, height = 5, family = "Japan1")
+
+Nintendo_smo_path <- here::here("04_report","Trend","output","Nintendo_smo_trend.pdf")
+ggsave(filename = Nintendo_smo_path, plot = Nintendo_smo_trend, device = "pdf",
+       width = 8, height = 5, family = "Japan1")
+
+
+#get Local trend model  Nintendo plot
+Nintendo <- result[[3]][[1]]
+days = length(Nintendo$a[,1])-1
+Nintendo_df <- data.frame(
+  "a" = Nintendo$a[,1][1:days+1],
+  "a_hat" = Nintendo$alphahat[,1],
+  "real" = data$Nintendo[1:days],
+  "t" = seq(1,days,1))
+
+Nintendo_kf_Localtrend <- ggplot(data = Nintendo_df, mapping = aes(x = t)) +
+  geom_line(aes(y = a, linetype = "filter") , data = Nintendo_df) +
+  geom_line(aes(y = real, linetype = "real"), data = Nintendo_df) +
+  scale_linetype_manual(values = c("filter" = "solid", "real" ="dashed")) + 
+  theme_classic() + 
+  ylab("株価")+
+  xlab("time")
+
+Nintendo_smo_Localtrend <- ggplot(data = Nintendo_df, mapping = aes(x = t)) +
+  geom_line(aes(y = a_hat, linetype = "smoother") , data = Nintendo_df) +
+  geom_line(aes(y = real, linetype = "real"), data = Nintendo_df)+
+  scale_linetype_manual(values = c("smoother"= "solid", "real" ="dashed")) +
+  theme_classic() + 
+  ylab("株価") +
+  xlab("time")
+
+
+Nintendo_kf_path <- here::here("04_report","Trend","output","Nintendo_kf_Localtrend.pdf")
+ggsave(filename = Nintendo_kf_path, plot = Nintendo_kf_Localtrend, device = "pdf",
+       width = 8, height = 5, family = "Japan1")
+
+Nintendo_smo_path <- here::here("04_report","Trend","output","Nintendo_smo_Localtrend.pdf")
+ggsave(filename = Nintendo_smo_path, plot = Nintendo_smo_Localtrend, device = "pdf",
+       width = 8, height = 5, family = "Japan1")
